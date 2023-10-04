@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Data Visualization</title>
+    <!-- Include Highcharts library -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+
+<body>
+    <h1>My Client App</h1>
+    <!-- Container for the chart -->
+    <div id="chart-container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+    <script>
+        // Fetch data from the server
+        fetch('http://127.0.0.1:8080/data.json') // Update the URL to match your server endpoint
+            .then(response => response.json())
+            .then(data => {
+                // Prepare the data for Highcharts
+                const chartData = Object.entries(data).map(([key, value]) => ({
+                    name: key,
+                    y: (value) // Parse string to float if necessary
+                }));
+
+                console.log(chartData, "received from the server");
+                // Create the Highcharts column chart
+                Highcharts.chart('chart-container', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'JSON Data Visualization'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        title: {
+                            text: 'Player'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Value'
+                        }
+                    },
+                    series: [{
+                        name: 'Value',
+                        data: chartData
+                    }]
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    </script>
+</body>
+
+</html>
